@@ -17,11 +17,6 @@ async def read_root():
         "available_countries": countries
     }
 
-
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
-
 @app.get("/localtime/{country}")
 async def get_local_time(country: str):
     try:

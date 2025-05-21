@@ -10,14 +10,17 @@ This application is a simple FastAPI-based web service that provides the followi
 ## Features
 - **Country List**: Returns a dictionary of countries in the format `{'TH': 'Thailand', 'US': 'United States', ...}`.
 - **Local Time API**: Fetches the current local time for a given country code.
-- **Dockerized Deployment**: Easily deployable using Docker.
 
 ## Endpoints
 - `/`: Displays a welcome message, instructions, and a list of available countries.
 - `/localtime/{country}`: Returns the local time for the specified country code.
+- `/docs`: API swagger
+- `/metrics`: simple instrument for prometheus
 
 ## How to Run
 1. Build and run the application using Docker:
    ```bash
    docker build -t simple-fastapi .
    docker run -p 8000:8000 simple-fastapi
+
+2. with k8s image can be found here `quay.io/rh_ee_swongpai/fast-localtime-check`
