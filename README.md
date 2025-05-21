@@ -1,4 +1,5 @@
 # simple-fastapi
+![ci workflow](https://github.com/Surote/simple-fastapi/actions/workflows/ci.yaml/badge.svg)
 
 ## Purpose
 This application is a simple FastAPI-based web service that provides the following functionality:
