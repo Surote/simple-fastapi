@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from datetime import datetime
 import pytz
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
+
+# Instrument the app with Prometheus metrics
+Instrumentator().instrument(app).expose(app)
 
 @app.get("/")
 async def read_root():
