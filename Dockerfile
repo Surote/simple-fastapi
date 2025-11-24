@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM registry.access.redhat.com/ubi9/python-312:9.6-1747333115
+FROM registry.access.redhat.com/ubi9/python-312@sha256:e151f5a3319d75dec2a7d57241ba7bb75f1b09bc3f7092d7615ea9c5aedb114c
 
 # Set the working directory in the container
 WORKDIR /app
