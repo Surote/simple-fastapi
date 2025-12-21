@@ -17,12 +17,39 @@ This application is a simple FastAPI-based web service that provides the followi
 - **Local Time API**: Fetches the current local time for a given country code.
 
 ## Endpoints
-- `/`: Displays a welcome message, instructions, and a list of available countries.
-- `/localtime/{country}`: Returns the local time for the specified country code.
-- `/docs`: API swagger
-- `/metrics`: simple instrument for prometheus
+- `GET /`
+  - Displays a welcome message, instructions, and a list of available countries.
+- `GET /localtime/{country}`
+  - Returns the local time, **timezone name**, and country name for the specified ISO 3166-1 alpha-2 country code.
+  - **Example Response**:
+    ```json
+    {
+      "country": "United States",
+      "timezone": "America/New_York",
+      "local_time": "2023-10-27 10:30:00"
+    }
+    ```
+- `GET /docs`
+  - Interactive API documentation (Swagger UI).
+- `GET /metrics`
+  - Prometheus metrics endpoint.
 
-## How to Run
+## Local Development
+1.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+2.  **Run the application**:
+    ```bash
+    uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+    ```
+3.  **Test**: Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser.
+
+## Observability
+-   **OpenTelemetry**: The application is instrumented with OpenTelemetry to trace requests. Traces are exported to the console and an OTLP collector (default: `localhost:4317`).
+-   **Prometheus**: Metrics are exposed at `/metrics`.
+
+## Deployment
 1. Build and run the application using Docker:
    ```bash
    docker build -t simple-fastapi .

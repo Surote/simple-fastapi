@@ -32,6 +32,9 @@ Instrumentator().instrument(app).expose(app)
 
 @app.get("/")
 async def read_root():
+    """
+    Root endpoint that provides instructions and a list of available countries.
+    """
     countries = {code.upper(): name for code, name in pytz.country_names.items()}
     return {
         "message": "Welcome to FastAPI with async!",
@@ -41,6 +44,15 @@ async def read_root():
 
 @app.get("/localtime/{country}")
 async def get_local_time(country: str):
+    """
+    Get the current local time for a specific country.
+    
+    Args:
+        country (str): The ISO 3166-1 alpha-2 country code (e.g., US, FR).
+        
+    Returns:
+        dict: Country name, specific timezone used, and local time.
+    """
     try:
         # Get the full name of the country
         country_name = pytz.country_names[country.upper()]
@@ -48,10 +60,14 @@ async def get_local_time(country: str):
         timezones = pytz.country_timezones.get(country.upper())
         if not timezones:
             return {"error": "No timezone found for this country code"}
+        
         # Get the current local time in the first timezone
-        local_time = datetime.now(pytz.timezone(timezones[0]))
+        # default to the first one available
+        selected_timezone = timezones[0]
+        local_time = datetime.now(pytz.timezone(selected_timezone))
         return {
             "country": country_name,
+            "timezone": selected_timezone,
             "local_time": local_time.strftime("%Y-%m-%d %H:%M:%S")
         }
     except KeyError:
