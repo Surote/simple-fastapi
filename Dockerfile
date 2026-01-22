@@ -4,8 +4,8 @@ FROM registry.access.redhat.com/ubi9/python-312@sha256:e151f5a3319d75dec2a7d5724
 WORKDIR /app
 
 # Create virtual environment and install dependencies
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+RUN python -m venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
@@ -17,8 +17,8 @@ FROM registry.access.redhat.com/ubi9/python-312@sha256:e151f5a3319d75dec2a7d5724
 WORKDIR /app
 
 # Copy virtual environment from builder
-COPY --from=builder /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+COPY --from=builder /app/.venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy only the application code
 COPY app.py .
