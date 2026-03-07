@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from datetime import datetime
 import pytz
+import json
 from prometheus_fastapi_instrumentator import Instrumentator
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
@@ -10,8 +11,29 @@ from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
+
+def json_span_formatter(span):
+    """Format span as single-line JSON."""
+    span_data = {
+        "name": span.name,
+        "context": {
+            "trace_id": format(span.context.trace_id, "032x"),
+            "span_id": format(span.context.span_id, "016x"),
+        },
+        "kind": str(span.kind),
+        "parent_id": format(span.parent.span_id, "016x") if span.parent else None,
+        "start_time": span.start_time,
+        "end_time": span.end_time,
+        "status": {
+            "status_code": str(span.status.status_code),
+        },
+        "attributes": dict(span.attributes) if span.attributes else {},
+    }
+    return json.dumps(span_data, default=str)
+
+
 provider = TracerProvider()
-processor = BatchSpanProcessor(ConsoleSpanExporter())
+processor = BatchSpanProcessor(ConsoleSpanExporter(formatter=json_span_formatter))
 provider.add_span_processor(processor)
 
 # Set up OTLP exporter to send traces to OTEL Collector (default endpoint: localhost:4317)
