@@ -34,3 +34,6 @@ dist/
 # Docker
 *.env
 Dockerfile.*
+
+# Claude Code
+.claude/

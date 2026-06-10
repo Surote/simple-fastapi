@@ -1,10 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from datetime import datetime
+import os
 import pytz
 import json
 from prometheus_fastapi_instrumentator import Instrumentator
 from opentelemetry import trace
-from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
@@ -64,6 +64,12 @@ async def read_root():
         "available_countries": countries
     }
 
+@app.get("/pod")
+async def get_pod_info():
+    """Return the pod name this instance is running on."""
+    hostname = os.environ.get("HOSTNAME", "unknown")
+    return {"pod_name": hostname}
+
 @app.get("/localtime/{country}")
 async def get_local_time(country: str):
     """
@@ -75,22 +81,19 @@ async def get_local_time(country: str):
     Returns:
         dict: Country name, specific timezone used, and local time.
     """
-    try:
-        # Get the full name of the country
-        country_name = pytz.country_names[country.upper()]
-        # Get the timezone(s) for the country (use upper, not lower)
-        timezones = pytz.country_timezones.get(country.upper())
-        if not timezones:
-            return {"error": "No timezone found for this country code"}
-        
-        # Get the current local time in the first timezone
-        # default to the first one available
-        selected_timezone = timezones[0]
-        local_time = datetime.now(pytz.timezone(selected_timezone))
-        return {
-            "country": country_name,
-            "timezone": selected_timezone,
-            "local_time": local_time.strftime("%Y-%m-%d %H:%M:%S")
-        }
-    except KeyError:
-        return {"error": "Invalid country code or timezone not found"}
+    country_upper = country.upper()
+    if country_upper not in pytz.country_names:
+        raise HTTPException(status_code=400, detail="Invalid country code")
+
+    timezones = pytz.country_timezones.get(country_upper)
+    if not timezones:
+        raise HTTPException(status_code=404, detail="No timezone found for this country code")
+
+    selected_timezone = timezones[0]
+    local_time = datetime.now(pytz.timezone(selected_timezone))
+    return {
+        "country": pytz.country_names[country_upper],
+        "timezone": selected_timezone,
+        "all_timezones": timezones,
+        "local_time": local_time.strftime("%Y-%m-%d %H:%M:%S")
+    }
