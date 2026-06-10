@@ -14,18 +14,29 @@ This application is a simple FastAPI-based web service that provides the followi
 
 ## Features
 - **Country List**: Returns a dictionary of countries in the format `{'TH': 'Thailand', 'US': 'United States', ...}`.
-- **Local Time API**: Fetches the current local time for a given country code.
+- **Local Time API**: Fetches the current local time for a given country code, including all available timezones.
+- **Pod Info**: Returns the Kubernetes pod name the instance is running on.
 
 ## Endpoints
 - `GET /`
   - Displays a welcome message, instructions, and a list of available countries.
+- `GET /pod`
+  - Returns the Kubernetes pod name (from `HOSTNAME` env var).
+  - **Example Response**:
+    ```json
+    {
+      "pod_name": "my-app-pod-abc123"
+    }
+    ```
 - `GET /localtime/{country}`
-  - Returns the local time, **timezone name**, and country name for the specified ISO 3166-1 alpha-2 country code.
+  - Returns the local time, **timezone name**, all available timezones, and country name for the specified ISO 3166-1 alpha-2 country code.
+  - Returns HTTP 400 for invalid country codes.
   - **Example Response**:
     ```json
     {
       "country": "United States",
       "timezone": "America/New_York",
+      "all_timezones": ["America/New_York", "America/Chicago", "..."],
       "local_time": "2023-10-27 10:30:00"
     }
     ```
