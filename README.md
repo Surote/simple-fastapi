@@ -1,4 +1,4 @@
-# simple-fastapi
+# simple-fastapi-latest
 ![ci workflow](https://github.com/Surote/simple-fastapi/actions/workflows/ci.yaml/badge.svg)
 
 ![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)
