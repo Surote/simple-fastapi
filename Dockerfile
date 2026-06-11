@@ -30,6 +30,7 @@ RUN python3.12 -m venv /opt/venv \
 # Runtime stage
 FROM registry.access.redhat.com/hi/python:3.12.13
 COPY --from=builder --chown=1001:0 /opt/venv /opt/venv
+COPY --from=builder /usr/lib64/libstdc++.so.6* /usr/lib64/
 ENV PATH="/opt/venv/bin:$PATH"
 WORKDIR /app
 COPY --chown=1001:0 . .
