@@ -32,6 +32,7 @@ jobs:
         name: Build and push UBI to QUAY
         uses: docker/build-push-action@v4
         with:
+          context: .
           file: Dockerfile.ubi
           push: true
           tags: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:ubi-latest
@@ -40,6 +41,7 @@ jobs:
         name: Build and push RHHI to QUAY
         uses: docker/build-push-action@v4
         with:
+          context: .
           file: Dockerfile.rhhi
           push: true
           tags: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:rhhi-latest
