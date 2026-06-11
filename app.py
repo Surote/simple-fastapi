@@ -11,7 +11,6 @@ from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
-
 def json_span_formatter(span):
     """Format span as single-line JSON."""
     span_data = {
