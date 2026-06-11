@@ -24,10 +24,13 @@
 FROM registry.access.redhat.com/hi/python:3.12-builder AS builder
 USER root
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3.12 -m venv /opt/venv \
+ && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 # Runtime stage
 FROM registry.access.redhat.com/hi/python:3.12.13
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
-COPY . .
+COPY --from=builder --chown=1001:0 /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+WORKDIR /app
+COPY --chown=1001:0 . .
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
