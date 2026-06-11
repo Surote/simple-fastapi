@@ -2,7 +2,7 @@ name: build push image
 on:
   push:
     branches:
-      - 'main'
+      - 'base'
     paths-ignore:
       - ".github/**"
       - "README.md"
