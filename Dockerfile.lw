@@ -8,6 +8,7 @@ RUN --mount=type=secret,id=netrc,target=/root/.netrc \
     python3.12 -m venv /opt/venv \
  && /opt/venv/bin/pip install --no-cache-dir \
       --index-url https://packages.redhat.com/lightwell/python/remediated/ \
+      --extra-index-url https://pypi.org/simple/ \
       -r requirements.txt
 
 # Runtime stage
