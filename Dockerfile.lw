@@ -3,7 +3,10 @@ FROM registry.access.redhat.com/hi/python:3.12-builder AS builder
 USER root
 COPY requirements.txt .
 # Install from Red Hat Lightwell Network; credentials come from a BuildKit
-# secret so the token never lands in an image layer.
+# secret so the token never lands in an image layer. NETRC env is required:
+# the s2i base image sets HOME=/opt/app-root/src, so pip would not find the
+# file under /root by itself.
+ENV NETRC=/root/.netrc
 RUN --mount=type=secret,id=netrc,target=/root/.netrc \
     python3.12 -m venv /opt/venv \
  && /opt/venv/bin/pip install --no-cache-dir \
