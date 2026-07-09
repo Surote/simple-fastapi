@@ -7,8 +7,12 @@ WORKDIR /app
 # Copy the requirements file to the container
 COPY requirements.txt .
 
-# Install the required Python packages
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the required Python packages from the Lightwell index declared in
+# requirements.txt. Credentials come from a BuildKit secret; NETRC points pip
+# at the mount since the s2i image sets HOME=/opt/app-root/src.
+ENV NETRC=/tmp/.netrc
+RUN --mount=type=secret,id=netrc,target=/tmp/.netrc,uid=1001,mode=0400 \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code to the container
 COPY . .

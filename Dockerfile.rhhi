@@ -24,7 +24,11 @@
 FROM registry.access.redhat.com/hi/python:3.12-builder AS builder
 USER root
 COPY requirements.txt .
-RUN python3.12 -m venv /opt/venv \
+# Lightwell credentials via BuildKit secret; NETRC required because the s2i
+# image sets HOME=/opt/app-root/src, so pip would not look in /root.
+ENV NETRC=/root/.netrc
+RUN --mount=type=secret,id=netrc,target=/root/.netrc \
+    python3.12 -m venv /opt/venv \
  && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 # Runtime stage

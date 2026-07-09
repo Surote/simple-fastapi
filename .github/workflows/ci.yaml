@@ -29,6 +29,15 @@ jobs:
           password: ${{ secrets.QUAY_SECRET }}
 
       -
+        name: Create Lightwell .netrc
+        run: |
+          cat > /tmp/lightwell.netrc <<EOF
+          machine packages.redhat.com
+          login ${{ secrets.RHLN_SA_USER }}
+          password ${{ secrets.RHLN_SA_TOKEN }}
+          EOF
+
+      -
         name: Build and push UBI to QUAY
         uses: docker/build-push-action@v4
         with:
@@ -36,6 +45,8 @@ jobs:
           file: Dockerfile.ubi
           push: true
           tags: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:${{ github.sha }}
+          secret-files: |
+            netrc=/tmp/lightwell.netrc
 
       -
         name: Build and push RHHI to QUAY
@@ -45,3 +56,5 @@ jobs:
           file: Dockerfile.rhhi
           push: true
           tags: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:rhhi-${{ github.sha }}
+          secret-files: |
+            netrc=/tmp/lightwell.netrc
