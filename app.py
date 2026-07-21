@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from datetime import datetime
 import os
 import pytz
@@ -97,3 +97,8 @@ async def get_local_time(country: str):
         "all_timezones": timezones,
         "local_time": local_time.strftime("%Y-%m-%d %H:%M:%S")
     }
+
+@app.get("/headers")
+async def get_headers(request: Request):
+    """Return all HTTP headers sent by the client."""
+    return {"headers": dict(request.headers)}
