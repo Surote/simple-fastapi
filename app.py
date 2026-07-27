@@ -102,3 +102,4 @@ async def get_local_time(country: str):
 async def get_headers(request: Request):
     """Return all HTTP headers sent by the client."""
     return {"headers": dict(request.headers)}
+
