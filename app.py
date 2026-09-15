@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from datetime import datetime
+import logging
 import os
 import pytz
 import json
@@ -43,6 +44,9 @@ provider.add_span_processor(otlp_processor)
 
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -102,4 +106,16 @@ async def get_local_time(country: str):
 async def get_headers(request: Request):
     """Return all HTTP headers sent by the client."""
     return {"headers": dict(request.headers)}
+
+@app.get("/logs/test")
+async def generate_test_logs():
+    """
+    Generate a sample WARNING and ERROR log entry.
+
+    Useful for testing log aggregation/alerting pipelines (e.g. verifying
+    that warning/error level logs from this pod are correctly collected).
+    """
+    logger.warning("Test warning log generated via /logs/test endpoint")
+    logger.error("Test error log generated via /logs/test endpoint")
+    return {"message": "Generated one WARNING and one ERROR log entry"}
 

@@ -16,6 +16,8 @@ This application is a simple FastAPI-based web service that provides the followi
 - **Country List**: Returns a dictionary of countries in the format `{'TH': 'Thailand', 'US': 'United States', ...}`.
 - **Local Time API**: Fetches the current local time for a given country code, including all available timezones.
 - **Pod Info**: Returns the Kubernetes pod name the instance is running on.
+- **Request Headers**: Returns all HTTP headers sent by the client.
+- **Log Test**: Generates a sample `WARNING` and `ERROR` log entry, useful for testing log aggregation/alerting pipelines.
 
 ## Endpoints
 - `GET /`
@@ -38,6 +40,25 @@ This application is a simple FastAPI-based web service that provides the followi
       "timezone": "America/New_York",
       "all_timezones": ["America/New_York", "America/Chicago", "..."],
       "local_time": "2023-10-27 10:30:00"
+    }
+    ```
+- `GET /headers`
+  - Returns all HTTP headers sent by the client.
+  - **Example Response**:
+    ```json
+    {
+      "headers": {
+        "host": "localhost:8000",
+        "user-agent": "curl/8.4.0"
+      }
+    }
+    ```
+- `GET /logs/test`
+  - Generates one `WARNING` and one `ERROR` log entry. Useful for testing log aggregation/alerting pipelines.
+  - **Example Response**:
+    ```json
+    {
+      "message": "Generated one WARNING and one ERROR log entry"
     }
     ```
 - `GET /docs`
