@@ -46,3 +46,11 @@ jobs:
           tags: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:lw-${{ github.sha }}
           secret-files: |
             netrc=/tmp/lightwell.netrc
+
+      -
+        name: Generate SBOM for Lightwell image
+        uses: anchore/sbom-action@v0
+        with:
+          image: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:lw-${{ github.sha }}
+          format: spdx-json
+          artifact-name: sbom-lw-${{ github.sha }}.spdx.json

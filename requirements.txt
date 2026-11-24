@@ -1,6 +1,10 @@
 # Source: https://packages.redhat.com/lightwell/python/validated/
 # All pins resolved against the Lightwell validated index only (linux/amd64).
+# Remediated builds carry a +rhlw.N local version; with exact == pins pip
+# prefers them over the plain validated build and falls back to validated
+# when no remediated build exists. Keep pins exact or this preference breaks.
 --index-url https://packages.redhat.com/lightwell/python/validated/simple/
+--extra-index-url https://packages.redhat.com/lightwell/python/remediated/simple/
 annotated-doc==0.0.6
 annotated-types==0.8.0
 anyio==4.16.0

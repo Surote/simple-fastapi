@@ -49,6 +49,14 @@ jobs:
             netrc=/tmp/lightwell.netrc
 
       -
+        name: Generate SBOM for UBI image
+        uses: anchore/sbom-action@v0
+        with:
+          image: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:${{ github.sha }}
+          format: spdx-json
+          artifact-name: sbom-ubi-${{ github.sha }}.spdx.json
+
+      -
         name: Build and push RHHI to QUAY
         uses: docker/build-push-action@v4
         with:
@@ -58,3 +66,11 @@ jobs:
           tags: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:rhhi-${{ github.sha }}
           secret-files: |
             netrc=/tmp/lightwell.netrc
+
+      -
+        name: Generate SBOM for RHHI image
+        uses: anchore/sbom-action@v0
+        with:
+          image: quay.io/${{secrets.QUAY_USER}}/fast-localtime-check:rhhi-${{ github.sha }}
+          format: spdx-json
+          artifact-name: sbom-rhhi-${{ github.sha }}.spdx.json
